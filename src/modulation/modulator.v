@@ -32,11 +32,8 @@ always@(posedge clk_slow or negedge rst) begin
             bit_latched <= bit_group;
 
         if (group_count == GROUP_NUM - 1'd1) begin
-            group_flag <= 1'b0;
-            group_count <= 1'd0;
-        end else if (group_count == GROUP_NUM - 2'd2) begin
             group_flag <= 1'b1;
-            group_count <= group_count + 1'd1;
+            group_count <= 1'd0;
         end else begin
             group_flag <= 1'b0;
             group_count <= group_count + 1'd1;
