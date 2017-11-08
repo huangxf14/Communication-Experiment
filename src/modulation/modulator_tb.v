@@ -8,6 +8,8 @@ localparam SET_RSTH = 18;
 reg clk_fast, clk_slow, rst;
 reg valid;
 reg bit_in;
+wire [7:0]wav_sine;
+wire [4:0]wav_noise;
 wire [7:0]wav_out;
 
 initial begin
@@ -22,6 +24,7 @@ end
 
 initial fork
     #SET_RSTH rst <= 1'b1;
+    #80 valid <= 1'b1;
 join
 
 // generate clk_slow from clk_fast
@@ -43,12 +46,14 @@ end
 always@(posedge clk_slow or negedge rst) begin
     if(!rst) begin
         bit_in <= 1'b0;
-        valid <= 1'b0;
     end else begin
         bit_in <= $urandom%2 + 1'b1;
-        valid <= 1'b1;
     end
 end
 
-modulator M0 (clk_fast, clk_slow, rst, valid, bit_in, wav_out);
+modulator M0 (clk_fast, clk_slow, rst, valid, bit_in, wav_sine);
+pseudo_random PRandom0 (clk_fast, rst, wav_noise);
+assign wav_out = (~wav_noise[4])? wav_sine + wav_noise[3:0]:
+                 (wav_noise[3:0] < wav_sine)? wav_sine - wav_noise[3:0]:
+                 8'd0;
 endmodule
