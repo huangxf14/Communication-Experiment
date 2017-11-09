@@ -22,7 +22,7 @@ always @ (posedge clk or posedge rst )
 			data_o <=0;
 			start<=0;
          end
-	   else if(start == 1 || data_i == 1)
+	   else// if(start == 1 || data_i == 1)
 		 begin 
 		    if(counter < 15)
 			  begin
