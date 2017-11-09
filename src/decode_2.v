@@ -243,6 +243,7 @@ module viterbi(
        newcode[13:12]<= 2'b11;
        decode1[0]     <= 0;
        decode1[6:1]   <= decode3[6:1];
+	   decode5<=decode3;
       end
       else begin
        error1 <= error1 + {3'b000,0^code[13]} + {3'b000,0^code[12]};
@@ -252,9 +253,10 @@ module viterbi(
        newcode[13:12]<= 2'b00;
        decode1[0]     <= 0;
        decode1[6:1]   <= decode1[6:1];
+	   decode5<=decode1;
       end
-     end    
- 3'b111 :  decode5[6:0] <= decode1[6:0];   
+	  decode_len<=3'b000;
+     end     
    default :begin
          possible_code1[1:0] <= 2'b00;
          possible_code2[1:0] <= 2'b00;
