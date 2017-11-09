@@ -10,7 +10,7 @@ reg    [16:0] mem1;
 reg    [3:0] counter;
 reg data_o;
 reg flag;
-reg start;
+//reg start;
 always @ (posedge clk or posedge rst )
    begin
        if(!rst)
@@ -20,9 +20,9 @@ always @ (posedge clk or posedge rst )
 			mem1[16:0] <= 0;
 			counter <= 0;
 			data_o <=0;
-			start<=0;
+			//start<=0;
          end
-	   else if(start == 1 || data_i == 1)
+	   else //if(start == 1 || data_i == 1)
 		 begin 
 		    if(counter < 15)
 			  begin
@@ -46,7 +46,7 @@ always @ (posedge clk or posedge rst )
 				else
 					flag<=0;
 			  end
-			  start <=1;
+			//  start <=1;
          end 
 end 
 endmodule
