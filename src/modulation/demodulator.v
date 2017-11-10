@@ -32,6 +32,10 @@ localparam [7:0] sine_value[31:0] = '{
     8'h40, 8'h4c, 8'h58, 8'h64, 8'h6d, 8'h75, 8'h7b, 8'h7f, 8'h80, 8'h7f, 8'h7b, 8'h75, 8'h6d, 8'h64, 8'h58, 8'h4c,
     8'h40, 8'h34, 8'h28, 8'h1c, 8'h13, 8'hb,  8'h5,  8'h1,  8'h0,  8'h1,  8'h5,  8'hb,  8'h13, 8'h1c, 8'h28, 8'h34
 };
+localparam [7:0] cosine_value[31:0] = '{
+    8'h80, 8'h7f, 8'h7b, 8'h75, 8'h6d, 8'h64, 8'h58, 8'h4c, 8'h40, 8'h34, 8'h28, 8'h1c, 8'h13, 8'hb,  8'h5,  8'h1,
+    8'h0,  8'h1,  8'h5,  8'hb,  8'h13, 8'h1c, 8'h28, 8'h34, 8'h40, 8'h4c, 8'h58, 8'h64, 8'h6d, 8'h75, 8'h7b, 8'h7f
+};
 
 // Buffer for ADC wave inputs
 reg [7:0] wav_in_buffer[N - 1 : 0];
@@ -41,38 +45,57 @@ always@(posedge clk_fast or negedge rst) begin
         for (i = 0; i < N; i = i + 1)
             wav_in_buffer[i] <= 8'd0;
     end else begin
-        for (i = 1; i < N; i = i + 1)
+        for (i = 0; i < N; i = i + 1)
             wav_in_buffer[N-i] <= wav_in_buffer[N-i-1];
         wav_in_buffer[0] <= wav_in;
     end
 end
 
 // Multiply-and-Adder-tree for correlation calculation; delay is 5 fast clock cycles
-reg [23:0] adder_regs[N*DEPTH - 1 : 0];
-always@(posedge clk_fast or negedge rst) begin
+reg [23:0] adder_regsine[DEPTH : 0][N - 1:0];
+reg [23:0] adder_regcosine[DEPTH : 0][N - 1:0];
+
+always@(posedge clk_fast) begin
     if (!rst) begin
         for (i = 0; i < N; i = i + 1)
-            adder_regs[N*DEPTH - 1 - i] <= 24'd0;
+            adder_regsine[DEPTH][i] <= 24'd0;
     end else begin
         for (i = 0; i < N; i = i + 1) begin
-            adder_regs[N*DEPTH - i - 1] <= wav_in_buffer[i] * sine_value[i];
+            adder_regsine[DEPTH][N - i - 1] <= wav_in_buffer[N - i - 1] * sine_value[N - i - 1];
+        end
+    end
+end
+always@(posedge clk_fast) begin
+    if (!rst) begin
+        for (i = 0; i < N; i = i + 1)
+            adder_regcosine[DEPTH][i] <= 24'd0;
+    end else begin
+        for (i = 0; i < N; i = i + 1) begin
+            adder_regcosine[DEPTH][N - i - 1] <= wav_in_buffer[N - i - 1] * cosine_value[N - i - 1];
         end
     end
 end
 
 genvar adder_i;
 generate
-for (adder_i = 0; adder_i < DEPTH - 1; adder_i = adder_i + 1) begin: level_i
+for (adder_i = 0; adder_i < DEPTH; adder_i = adder_i + 1) begin: level_i
     always@(posedge clk_fast) begin
-        for (i = 0; i < N / (2**(adder_i + 1)); i = i + 1) begin
-            adder_regs[N*(DEPTH-adder_i-1) - i - 1] <= adder_regs[N*(DEPTH-adder_i) - 2*i - 1] + adder_regs[N*(DEPTH-adder_i) - 2*i - 2]; 
+        for (i = 0; i < N / (2**(adder_i+1)); i = i + 1) begin
+            adder_regsine[DEPTH - adder_i - 1][N - i - 1] <= adder_regsine[DEPTH - adder_i][N - 2*i - 1] + adder_regsine[DEPTH - adder_i][N - 2*i - 2]; 
+        end
+    end
+    always@(posedge clk_fast) begin
+        for (i = 0; i < N / (2**(adder_i+1)); i = i + 1) begin
+            adder_regcosine[DEPTH - adder_i - 1][N - i - 1] <= adder_regcosine[DEPTH - adder_i][N - 2*i - 1] + adder_regcosine[DEPTH - adder_i][N - 2*i - 2]; 
         end
     end
 end
 endgenerate
 
-wire [23:0] corr;
-assign corr = adder_regs[N-1];
+wire [23:0] sin_corr;
+wire [23:0] cos_corr;
+assign sin_corr = adder_regsine[0][N-1];
+assign cos_corr = adder_regcosine[0][N-1];
 
 // TODO: wave phase detection based on corr; incoming symbol detection (main part of demodulator)
 endmodule
