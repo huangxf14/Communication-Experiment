@@ -1,0 +1,2 @@
+f=fopen('trainingData.csv');
+r=textscan(f,'%*s %*s %*s %s','delimiter',',');
