@@ -2,7 +2,8 @@
 module viterbi(
   input  clk1,
   input  clk2,
-  input  reset,  //
+  input  reset,  
+  input  valid,
   input  singlecode,
   output possiblecode,
   output ans);  
@@ -14,7 +15,7 @@ module viterbi(
   reg[6:0]      decode,decode1,decode2,decode3,decode4;
   reg[6:0]      decode5;
   always@(posedge clk1)begin
-   if(!reset)begin
+   if((!reset)||(!valid))begin
         code   <=  0;
     codebuff  <=  0;
     code_len   <=  0;
@@ -33,7 +34,7 @@ module viterbi(
 	end 
   end
    always@(posedge clk2)begin
-  if(!reset)begin
+  if((!reset)||(!valid))begin
        decode_len <= 0;
    possible_code1   <= 0;
    possible_code2   <= 0;
@@ -275,7 +276,7 @@ module viterbi(
   end
  end
   always@(posedge clk1)begin
-    if(!reset)begin
+    if((!reset)||(!valid))begin
    newcode1  <= 0;
    decode     <= 0;
    end

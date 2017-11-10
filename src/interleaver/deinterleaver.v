@@ -1,8 +1,9 @@
 `timescale 1ns/1ps
 
-module deinterleaver (clk, rst, data_i, data_o);
+module deinterleaver (clk, rst,valid,data_i, data_o);
 input  clk;
 input  rst;
+input valid;
 input  data_i;
 output data_o;
 reg    [16:0] mem0;
@@ -13,7 +14,7 @@ reg flag;
 //reg start;
 always @ (posedge clk or posedge rst )
    begin
-       if(!rst)
+       if((!rst)||(!valid))
          begin
 		    flag <= 0;
             mem0[16:0] <= 0;
