@@ -11,7 +11,7 @@ reg    [3:0] counter;
 reg data_o;
 reg flag;
 //reg start;
-always @ (posedge clk or posedge rst )
+	always @ (posedge clk or negedge rst )
    begin
        if(!rst)
          begin
