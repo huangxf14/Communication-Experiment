@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-module viterbi(
+module decoder(
   input  clk1,
   input  clk2,
   input  reset,  
