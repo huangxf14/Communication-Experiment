@@ -37,9 +37,9 @@ wire code_recv;
 wire code_prob;
 wire data_recv;
 
-encoder enco(clk_div2,reset,valid_send,data_send,code_send);
+encoder enco(clk_div2,clk,reset,valid_send,data_send,code_send);
 
-interleaver inter(clk, reset, code_send, bit_send);
+interleaver inter(clk, valid_send, reset, code_send, bit_send);
 
 modulator modu (clk_wave, clk, reset, valid_send, bit_send, wav_send);
 pseudo_random noise (clk_wave, reset, wav_noise);
@@ -61,9 +61,9 @@ clk3=0;
 clk = 0;
 clk_div2 = 0; 
 reset = 0; 
-#10; 
+#32; 
 data_send = 1; 
-#15; 
+#32; 
 reset = 1; 
 end
 
@@ -94,33 +94,33 @@ end
 
 initial 
 begin 
-#25; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 1; 
-#32; 
+#64; 
 data_send = 0; 
-#32; 
+#64; 
 data_send = 0; 
 end 
 

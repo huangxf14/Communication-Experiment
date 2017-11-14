@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 
-module interleaver (clk, rst, data_i, data_o);
+module interleaver (clk, valid,rst, data_i, data_o);
 input  clk;
+input  valid;
 input  rst;
 input  data_i;
 output data_o;
@@ -14,7 +15,7 @@ reg flag;
 //reg start;
 	always @ (posedge clk or negedge rst )
    begin
-       if(!rst)
+       if((!rst)||(!valid))
          begin
 		    flag <= 0;
             mem0[16:0] <= 0;
@@ -27,8 +28,19 @@ reg flag;
 		 begin 
 		    if(counter < 15)
 			  begin
-		        counter <= counter+1;
-              if(flag == 0)
+		        counter <= counter+1; 
+			end
+			else if(counter == 15)
+			  begin
+			    counter <= 0;
+				if (flag==0)
+				begin
+						flag<=1;
+				else
+					flag<=0;
+			  end
+			//  start <=1;
+			if(flag == 0)
 			    begin
 			    mem0[counter]<=data_i;
 		            data_o <= mem1[counter/4+(counter%4)*4];//行列交织
@@ -38,16 +50,6 @@ reg flag;
 			    mem1[counter]<=data_i;
 			    data_o <= mem0[counter/4+(counter%4)*4];
 	            end
-			end
-			else if(counter == 15)
-			  begin
-			    counter <= 0;
-				if (flag==0)
-						flag<=1;
-				else
-					flag<=0;
-			  end
-			//  start <=1;
          end 
 end 
 endmodule
