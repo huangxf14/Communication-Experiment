@@ -111,12 +111,13 @@ reg [1:0] assure_times;
 
 localparam HIGH = 2'd0, MIDIUM = 2'd1, LOW = 2'd2;
 reg [4:0] wav_count;
-reg pre_valid;
+reg [2:0] pre_valid_count;
 wire [1:0] sin_corr_judge_i;
 wire [1:0] cos_corr_judge_i;
 reg [1:0] sin_corr_judge;
 reg [1:0] cos_corr_judge;
 reg [1:0] bit_out_i;
+reg serial_count;
 
 // State machine for frame header synchronization
 always@(posedge clk_fast or negedge rst) begin
@@ -199,10 +200,11 @@ always@(posedge clk_fast or negedge rst) begin
 end
 always@(posedge clk_fast or negedge rst) begin
     if (!rst) begin
-        wav_count <= 5'd0;
-        pre_valid <= 1'b0;
-        valid <= 1'b0;
-        bit_out_i <= 2'b0;
+        wav_count       <= 5'd0;
+        pre_valid_count <= 3'b0;
+        valid           <= 1'b0;
+        bit_out_i       <= 2'b0;
+        serial_count    <= 1'b0;
     end else begin
         if (sync_pulse) begin
             wav_count   <= wav_count_i + 5'd8;
@@ -211,14 +213,14 @@ always@(posedge clk_fast or negedge rst) begin
             wav_count   <= wav_count + 5'd1;
         end
         // drive valid signal
-        if ((!valid) && (!pre_valid) && (wav_count == 5'b11111)) begin
-            pre_valid <= 1'b1;
+        if ((!valid) && (wav_count == 5'd5) && (pre_valid_count != 3'd2)) begin
+            pre_valid_count <= pre_valid_count + 3'b1;
         end
-        if ((!valid) && (pre_valid) && (wav_count == 5'b10000)) begin
+        if ((!valid) && (wav_count == 5'd5) && (pre_valid_count == 3'd1)) begin
             valid <= 1'b1;
         end
         // symbol detection
-        if (valid && (wav_count == 5'd5)) begin
+        if ( ((pre_valid_count == 5'd1) || valid) && (wav_count == 5'd5)) begin
             if (sin_corr_judge == HIGH) begin
                 bit_out_i <= 2'b00;
             end else if (cos_corr_judge == HIGH) begin
@@ -229,6 +231,21 @@ always@(posedge clk_fast or negedge rst) begin
                 bit_out_i <= 2'b10;
             end else begin
                 bit_out_i <= 2'b00;
+            end
+        end
+    end
+end
+always@(posedge clk_slow or negedge rst) begin
+    if (!rst) begin
+        serial_count <= 2'b0;
+        bit_out     <= 1'b0;
+    end else begin
+        if (valid) begin
+            serial_count <= serial_count + 1'b1;
+            if (serial_count == 2'b0) begin
+                bit_out <= bit_out_i[1];
+            end else begin
+                bit_out <= bit_out_i[0];
             end
         end
     end
