@@ -6,8 +6,8 @@ input  rst;
 input valid;
 input  data_i;
 output data_o;
-reg    [16:0] mem0;
-reg    [16:0] mem1;
+reg    [15:0] mem0;
+reg    [15:0] mem1;
 reg    [3:0] counter;
 reg data_o;
 reg flag;
@@ -17,8 +17,8 @@ reg flag;
        if((!rst)||(!valid))
          begin
 		    flag <= 0;
-            mem0[16:0] <= 0;
-			mem1[16:0] <= 0;
+		 mem0[15:0] <= 0;
+		 mem1[15:0] <= 0;
 			counter <= 0;
 			data_o <=0;
 			//start<=0;

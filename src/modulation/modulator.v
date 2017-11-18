@@ -25,6 +25,10 @@ input wire clk_fast, clk_slow, rst;
 input wire valid;
 input wire bit_in;
 output reg [7:0] wav_out;
+// 00 : sine
+// 01 : cosine
+// 11 : -sine
+// 10 : -cosine
 localparam a00 = 5'd0, a01 = 5'd8, a11 = 5'd16, a10 = 5'd24;
 
 /* For data input buffers, need to deal with `valid` signal properly */

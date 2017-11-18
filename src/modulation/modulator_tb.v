@@ -3,7 +3,7 @@
 module modulator_tb;
 
 localparam HALF_PERIOD = 5;
-localparam TIMES_SLOW = 5'd16;
+localparam TIMES_SLOW = 8'd16;
 localparam SET_RSTH = 18;
 reg clk_fast, clk_slow, rst;
 reg valid;
@@ -31,7 +31,7 @@ initial fork
 join
 
 // generate clk_slow from clk_fast
-reg [4:0] slow_clkcount;
+reg [5:0] slow_clkcount;
 always@(posedge clk_fast or negedge rst) begin
     if(!rst) begin
         slow_clkcount <= 5'd0;
@@ -59,5 +59,5 @@ pseudo_random PRandom0 (clk_fast, rst, wav_noise);
 assign wav_out = (~wav_noise[4])? wav_sine + wav_noise[3:0] * 2:
                  (wav_noise[3:0] * 2 < wav_sine)? wav_sine - wav_noise[3:0] * 2:
                  8'd0;
-demodulator DeM0 (clk_fast, clk_slow, rst, wav_sine, bit_out, dem_valid);
+demodulator DeM0 (clk_fast, clk_slow, rst, wav_out, bit_out, dem_valid);
 endmodule
