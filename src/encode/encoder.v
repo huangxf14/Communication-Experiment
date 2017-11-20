@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module encoder
 	(
 		clk,
@@ -18,6 +19,7 @@ module encoder
 	reg [1:0] data_out;
 	reg flag;
 
+
 	reg [1:0]state;
 
 	initial
@@ -27,7 +29,7 @@ module encoder
 		flag=0;
 	end
 
-	always@(posedge clk)
+	always@(posedge clk_2 or negedge reset)
 	begin
 		if(!reset)
 			begin
@@ -60,6 +62,4 @@ module encoder
 	  end
 	end
    
-   
-	
 endmodule // encoder
