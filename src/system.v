@@ -32,6 +32,8 @@ wire [7:0]wav_send;
 wire [5:0]wav_noise;
 wire [7:0]wav_recv;
 wire valid_recv;
+wire valid_dein;
+wire valid_deco;
 
 
 wire bit_recv;
@@ -48,11 +50,11 @@ pseudo_random noise (clk_wave, reset, wav_noise);
 assign wav_recv = (~wav_noise[4])? wav_send + wav_noise[3:0] * 2:
                  (wav_noise[3:0] * 2 < wav_send)? wav_send - wav_noise[3:0] * 2:
                  8'd0;
-demodulator demodu (clk_wave, clk, reset, wav_send, bit_recv, valid_recv);
+demodulator demodu (clk_wave, clk, reset, wav_recv, bit_recv, valid_recv);
 
-deinterleaver deinter(clk, reset,valid_recv,bit_recv, code_recv);
+deinterleaver deinter(clk, reset,valid_recv,valid_dein,valid_deco,bit_recv, code_recv);
 
-decoder deco(clk,clk_div2,reset,valid_recv,code_recv,code_prob,data_recv);
+decoder deco(clk,clk_div2,reset,valid_deco,code_recv,code_prob,data_recv);
 
 initial begin
 
@@ -107,7 +109,7 @@ data_send = 1;
 #64; 
 data_send = 0; 
 #64; 
-data_send = 1; 
+data_send = 0; 
 #64; 
 data_send = 0; 
 #64; 

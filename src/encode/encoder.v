@@ -29,7 +29,7 @@ module encoder
 		flag=0;
 	end
 
-	always@(posedge clk_2 or negedge reset)
+	always@(posedge clk or negedge reset)
 	begin
 		if(!reset)
 			begin
