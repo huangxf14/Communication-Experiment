@@ -34,7 +34,6 @@ reg flag;
 			  begin
 			    counter <= 0;
 				if (flag==0)
-				begin
 						flag<=1;
 				else
 					flag<=0;

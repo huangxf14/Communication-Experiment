@@ -4,6 +4,7 @@ module encoder
 		clk2,
 		reset,
 		valid,
+		valid_wave,
 		data_in,
 		code_out
 	);
@@ -12,6 +13,7 @@ module encoder
 	input reset;
 	input wire data_in;
 	output reg valid;
+	output reg valid_wave;
 	output reg code_out;
 	reg [1:0] data_out;
 	reg flag;
@@ -21,6 +23,7 @@ module encoder
 	initial
 	begin
 		valid=0;
+		valid_wave=0;
 		flag=0;
 	end
 
@@ -31,6 +34,7 @@ module encoder
 				data_out <= 2'b0;
 				state <= 2'b0;
 				valid<=0;
+				valid_wave<=0;
 				flag<=0;
 			end 
 		else
@@ -49,6 +53,10 @@ module encoder
 	  begin
 	  	code_out <= (clk)? data_out[0]: data_out[1];
 	  	valid <= 1;
+	  end
+	  if (valid)
+	  begin
+	  	valid_wave=1;
 	  end
 	end
    

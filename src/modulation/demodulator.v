@@ -217,7 +217,7 @@ always@(posedge clk_fast or negedge rst) begin
             pre_valid_count <= pre_valid_count + 3'b1;
         end
         if ((!valid) && (wav_count == 5'd5) && (pre_valid_count == 3'd1)) begin
-            valid <= 1'b1;
+             valid <= 1'b1;
         end
         // symbol detection
         if ( ((pre_valid_count == 5'd1) || valid) && (wav_count == 5'd5)) begin
