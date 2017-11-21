@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module encode_tb;
 	reg test_in;
 	wire [1:0]test_out;

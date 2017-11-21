@@ -22,12 +22,12 @@ module encoder
 
 	reg [1:0]state;
 
-	initial
-	begin
-		valid=0;
-		valid_wave=0;
-		flag=0;
-	end
+	//initial
+	//begin
+	//	valid=0;
+	//	valid_wave=0;
+	//	flag=0;
+	//end
 
 	always@(posedge clk or negedge reset)
 	begin
@@ -53,8 +53,10 @@ module encoder
 		begin
 			valid<=0;
 			valid_wave<=0;
+			code_out<=0;
 		end
-		else if (flag)
+		else begin
+		if (flag)
 		begin
 		  code_out <= (clk)? data_out[0]: data_out[1];
 		  valid <= 1;
@@ -64,6 +66,7 @@ module encoder
 	  		//valid_wave=1;
 	  		valid_wave <= 1;
 	  	end
+	  end
 	end
    
 endmodule // encoder

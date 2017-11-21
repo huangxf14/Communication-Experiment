@@ -126,6 +126,7 @@ data_send = 1;
 data_send = 0; 
 #64; 
 data_send = 0; 
+$stop;
 end 
 
 
