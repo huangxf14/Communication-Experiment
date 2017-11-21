@@ -32,11 +32,12 @@ endfunction
 localparam N = 32;
 localparam DEPTH = f_ceil_log2(N);
 localparam CORR_DELAY = DEPTH + 1;
-localparam [7:0] sine_value[31:0] = {
+
+localparam reg [7:0] sine_value[31:0] = '{
     8'h40, 8'h4c, 8'h58, 8'h64, 8'h6d, 8'h75, 8'h7b, 8'h7f, 8'h80, 8'h7f, 8'h7b, 8'h75, 8'h6d, 8'h64, 8'h58, 8'h4c,
     8'h40, 8'h34, 8'h28, 8'h1c, 8'h13, 8'hb,  8'h5,  8'h1,  8'h0,  8'h1,  8'h5,  8'hb,  8'h13, 8'h1c, 8'h28, 8'h34
 };
-localparam [7:0] cosine_value[31:0] = {
+localparam reg [7:0] cosine_value[31:0] = '{
     8'h80, 8'h7f, 8'h7b, 8'h75, 8'h6d, 8'h64, 8'h58, 8'h4c, 8'h40, 8'h34, 8'h28, 8'h1c, 8'h13, 8'hb,  8'h5,  8'h1,
     8'h0,  8'h1,  8'h5,  8'hb,  8'h13, 8'h1c, 8'h28, 8'h34, 8'h40, 8'h4c, 8'h58, 8'h64, 8'h6d, 8'h75, 8'h7b, 8'h7f
 };
@@ -49,7 +50,7 @@ always@(posedge clk_fast or negedge rst) begin
         for (i = 0; i < N; i = i + 1)
             wav_in_buffer[i] <= 8'd0;
     end else begin
-        for (i = 0; i < N; i = i + 1)
+        for (i = 1; i < N; i = i + 1)
             wav_in_buffer[N-i] <= wav_in_buffer[N-i-1];
         wav_in_buffer[0] <= wav_in;
     end
@@ -126,7 +127,7 @@ always@(posedge clk_fast or negedge rst) begin
         sync_pulse      <= 1'b0;
 
         max_corr        <= 24'd0;
-        wav_count_i     <= 6'd0;
+        wav_count_i     <= 5'd0;
         assure_times    <= 2'd0;
     end else begin
         case(sync_state)
@@ -204,7 +205,6 @@ always@(posedge clk_fast or negedge rst) begin
         pre_valid_count <= 3'b0;
         valid           <= 1'b0;
         bit_out_i       <= 2'b0;
-        serial_count    <= 1'b0;
     end else begin
         if (sync_pulse) begin
             wav_count   <= wav_count_i + 5'd8;
@@ -237,7 +237,7 @@ always@(posedge clk_fast or negedge rst) begin
 end
 always@(posedge clk_slow or negedge rst) begin
     if (!rst) begin
-        serial_count <= 2'b0;
+        serial_count <= 1'b0;
         bit_out     <= 1'b0;
     end else begin
         if (valid) begin
