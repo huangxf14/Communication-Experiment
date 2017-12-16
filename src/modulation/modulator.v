@@ -45,7 +45,10 @@ assign bit_in_i = (~valid)? 1'b0 : bit_in;
 
 always@(posedge clk_slow or negedge rst) begin
     // When reset, or valid is LOW and all groups buffered in the shifter has runned out
-    if ( (!rst) || ((!valid) && (group_count == 3'd0)) ) begin
+    if ( (!rst) ) begin
+        group_flag  <= 1'b0;
+        bit_count   <= 2'd0;
+    end else if ((!valid) && (group_count == 3'd0) ) begin
         group_flag  <= 1'b0;
         bit_count   <= 2'd0;
     end else begin
@@ -88,7 +91,12 @@ assign wav_count_rstp = (~group_flag) & (group_flag_d1);
 
 // generate wav_count: the offset index for sine wave
 always@(posedge clk_fast or negedge rst) begin
-    if ( (!rst) || ((!valid) && (group_count == 3'd0)) ) begin
+    if ( (!rst) ) begin
+        rst_clear <= 1'b0;
+        group_flag_d1 <= 1'b0;
+        wav_count   <= 5'd0;
+        group_latched_d1 <= 2'b0;
+    end else if((!valid) && (group_count == 3'd0)) begin
         rst_clear <= 1'b0;
         group_flag_d1 <= 1'b0;
         wav_count   <= 5'd0;
@@ -128,15 +136,19 @@ always@(*) begin
 end
 
 always@(posedge clk_fast or negedge rst) begin
-    if ( (!rst) || ( (!valid) && group_count == 3'd0) ) begin
+    if (!rst) begin
         wav_index <= 5'd0;
     end else begin
-        wav_index <= wav_base + wav_count;
-    end
-    if (rst_clear) begin
-        wav_out <= wav_out_temp;
-    end else begin
-        wav_out <= 8'd0;
+        if ( (!valid) && group_count == 3'd0 )begin
+            wav_index <= 5'd0;
+        end else begin
+            wav_index <= wav_base + wav_count;
+        end
+        if (rst_clear) begin
+            wav_out <= wav_out_temp;
+        end else begin
+            wav_out <= 8'd0;
+        end
     end
 end
 

@@ -14,15 +14,13 @@
  *                                                                     | gen   |
  *                                                                      -------
  */
-module system(input clk_wave,input reset,output [7:0]led);
+module system(input clk_wave,input reset,output [7:0]led
+);
 
 reg clk1,clk2,clk3;
 
 //reg rst;
 //reg reset;
-//reg clk_wave;
-//wire[7:0]led;
-
 reg clk; 
 reg clk_div2; 
 wire valid_send;
@@ -51,6 +49,7 @@ reg flag;
 reg [3:0]number;
 reg data_show;
 reg lock;
+//wire[7:0]led;
 //debounce xdebounce(.clk(clk_wave),.key_i(rst),.key_o(reset));
 
 encoder enco(clk_div2,clk,reset,valid_send,valid_wave,data_send,code_send);
@@ -74,7 +73,7 @@ CommModem Show(.clk(clk_div2),.reset(reset),.lock(lock),.data_in(data_show),.led
 //initial
 //	begin
 //		clk_wave=0;
-//		reset = 0; 
+//		reset = 1; 
 //		#10
 //		reset = 0;
 //		#99
@@ -84,8 +83,8 @@ CommModem Show(.clk(clk_div2),.reset(reset),.lock(lock),.data_in(data_show),.led
 //		#60
 //		reset = 1;
 //	end
-// clk generator
-// always #1 clk_wave = ~clk_wave;
+//clk generator
+//always #1 clk_wave = ~clk_wave;
 
 always@(posedge clk_wave or negedge reset)begin
 	if(!reset) begin
@@ -136,7 +135,7 @@ end
 
 always @(posedge clk_div2 or negedge reset) begin
 	if (!reset) begin
-		data_in <= 14'b11010000111100;
+		data_in <= 14'b10010000101100;
 		data_send <= 0;
 		count <= 0;
 	end
