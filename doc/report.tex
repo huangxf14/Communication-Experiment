@@ -16,7 +16,7 @@
 \date{}
 \title{\textbf{通信原理实验}}
 \author{无45 \ *** \ **********\\
-        无45 \ *** \ **********\\
+        无45 \ 孙径舟 \ 2014011153\\
         无46 \ 黄秀峰 \ 2014011193\\
         无47 \ 刘畅 \ 2014011196}
 
@@ -67,6 +67,7 @@
 \subsubsection{信道编码模块}
 \include{encoder}
 
+<<<<<<< HEAD
 \subsubsection{交织模块}
 
 \paragraph{交织器的原理及作用}
@@ -99,6 +100,10 @@
 初始时：count=0；flag=0;mem0[15:0],mem1[15:0]=0;data\_o=0;
 
 \newpage
+=======
+\subsubsection{交织、解交织模块}
+\include{inter}
+>>>>>>> fcc59054e15012a6a978a62607825bb0f29f3436
 
 \subsubsection{调制模块}
 
@@ -111,33 +116,17 @@
 解交织模块与交织模块相同
 
 \subsubsection{信道解码模块}
-
-信道解码使用维特比译码器，判决方式为硬判决。设计思路如下：
-
-\paragraph{变量设计}
-
-\begin{itemize}
-\item \textbf{codebuff} ： 接收的码流，存于缓冲区中，数量达到一组后送入译码区
-\item \textbf{code} ： 译码区码流，即当然需要译码的码流
-\item \textbf{possible\_codex} ： 维特比译码图中，当前阶段第x个状态（共有四个状态）所对应的最优路径
-\item \textbf{errorx} ： 第x个最优路径（共有4条路径）对应的判决误差
-\item \textbf{decodex} ： 维特比译码中，当前阶段第x状态的最优路径所对应的输出译码
-\item \textbf{decode} ： 前一组码流（已译码结束）所对应的输出译码
-\end{itemize}
-
-\paragraph{译码流程}
-
-\begin{enumerate}
-\item 接收码流至codebuff，当接收完一组后，送入code中等待译码
-\item 每一个时钟周期，译码往前推进两位，求出当前状态下的最优路径并计算硬判决误差，并记录四个状态所对应的最优路径
-\item 完成一组译码后，将译码结果存入decode，之后每一个时钟周期输出一位译码结果
-\end{enumerate}
+\include{decoder}
 
 \subsection{软件仿真}
+\include{simulation}
 
 \section{实验总结}
+\include{summary}
 
 \end{document}
+
+
 
 
 

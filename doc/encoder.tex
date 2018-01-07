@@ -2,9 +2,9 @@
 
 本次实验中，我们使用的是$(2,1,3)$卷积编码，每输入一个信息比特，编码产生两位比特的输出，其框图如图.\ref{fig:encoder}所示。
 
-\begin{figure}
+\begin{figure}[htb]
 \centering
-\includegraphics[width=0.4\textwidth]{encoder.jpg}
+\includegraphics[width=0.4\textwidth]{images//encoder.jpg}
 \caption{\label{fig:encoder}(2,1,3)编码器}
 \end{figure}
 
@@ -31,11 +31,18 @@
 
 每次输入一位比特，编码两位输出，并将valid置为有效。当reset有效时，state清空，并将valid置为无效。
 
-仿真波形如图.\ref{fig:fangzhen}所示。
+仿真波形如图.\ref{fig:fangzhen}所示。其中data\_send为原始序列，code\_send为编码后序列；二者对应的时钟分别为clk\_div2和clk。从图中可以看出，data\_send每字符占用周期是code\_send两倍。下面用Python检验了一下输出结果，如图
+.\ref{fig:PythonSimu}，可见我们的编码是正确的。
 
-\begin{figure}
+\begin{figure}[htb]
 \centering
-\includegraphics[width=0.4\textwidth]{encoder_simulation.jpg}
+\includegraphics[width=0.9\textwidth]{images//encoder_simulation.jpg}
 \caption{\label{fig:fangzhen}(2,1,3)编码器仿真波形}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{images//python_simulation.jpg}
+\caption{\label{fig:PythonSimu}(2,1,3)编码器输出}
 \end{figure}
 
