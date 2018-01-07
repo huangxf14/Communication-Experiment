@@ -15,10 +15,10 @@
 %\geometry{left=2.54cm,right=2.54cm,top=2.18cm,bottom=3.18cm}
 \date{}
 \title{\textbf{通信原理实验}}
-\author{无45 \ *** \ **********\\
-        无45 \ 孙径舟 \ 2014011153\\
+\author{无45 \ 孙径舟 \ 2014011153\\
+        无45 \ 黄天昊 \ 2014011157\\
         无46 \ 黄秀峰 \ 2014011193\\
-        无47 \ 刘畅 \ 2014011196}
+        无47 \ 刘　畅 \ 2014011196}
 
 
 \begin{document}
@@ -65,7 +65,7 @@
 
 
 \subsubsection{信道编码模块}
-\include{encoder}
+\input{encoder}
 
 \subsubsection{交织模块}
 
@@ -82,7 +82,7 @@
     \includegraphics[width=\textwidth]{images//inter_input.png}
 \end{figure}
 
-即行顺序写入寄存器，列顺序读出。上图交织结果为a01,a05,a09,a13,a02,a06,a10,a14,a03,a07,a11,a15,a04,a08,a12,a16
+即行顺序写入寄存器，列顺序读出。上图交织结果为a01,a05,a09,a13,a02,a06,a10,a14,\\a03,a07,a11,a15,a04,a08,a12,a16.
 
 
 本实验中实现行列交织的具体算法为：
@@ -93,32 +93,26 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images//inter_pic.png}
+    \includegraphics[width=.8\textwidth]{images//inter_pic.png}
 \end{figure}
 
 初始时：count=0；flag=0;mem0[15:0],mem1[15:0]=0;data\_o=0;
 
-\newpage
-
-
-\subsubsection{调制模块}
-
-\subsubsection{信道模拟模块}
-
-\subsubsection{解调模块}
+\subsubsection{调制、信道模拟和解调模块}
+\input{modulation}
 
 \subsubsection{解交织模块}
 
 解交织模块与交织模块相同
 
 \subsubsection{信道解码模块}
-\include{decoder}
+\input{decoder}
 
 \subsection{软件仿真}
-\include{simulation}
+\input{simulation}
 
 \section{实验总结}
-\include{summary}
+\input{summary}
 
 \end{document}
 
